@@ -1,14 +1,37 @@
 // drawing functions
 
+#ifndef DRAWING_INCLUDED
+#define DRAWING_INCLUDED
+
+// declarations
+void drawPicture(unsigned char image, void *dest);
+void drawBackground(signed char *map, short width, short height, short x, short y, unsigned short *destLight, unsigned short *destDark);
+void clearBuffer(void *dest);
+void drawCharacter(short idx);
 void Sprite16_208_AND(short x, short y, unsigned short *sprite, unsigned short *dest);
 void Sprite16_208_OR(short x, short y, unsigned short *sprite, unsigned short *dest);
 void Sprite16_240_AND(short x, short y, unsigned short *sprite, void *dest);
 void Sprite16_240_OR(short x, short y, unsigned short *sprite, void *dest);
 
-// clear a 208x144 buffer
-void clearBuffer(void *dest)
+// draw a 160x100 picture to a screen buffer
+void drawPicture(unsigned char *image, void *screenBuffer)
 {
-	memset(dest, 0, 3744);
+	register char *src = (char *)image;
+	register char *dest = (char *)screenBuffer;
+	register short lines = 99;
+	
+	asm volatile (
+	   "0:
+		move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+
+		move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+
+		move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+
+		move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+
+		move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+
+		lea (10,%1),%1
+		dbra %2,0b"
+		: "=a" (src), "=a" (dest), "=d" (lines)
+		: "0"  (src), "1"  (dest), "2"  (lines)
+	);
 }
 
 // fill the buffers with the background contents
@@ -39,6 +62,12 @@ void drawBackground(signed char *map, short width, short height, short x, short 
 			}
 		}
 	}
+}
+
+// clear a 208x144 buffer
+void clearBuffer(void *dest)
+{
+	memset(dest, 0, 3744);
 }
 
 // draw the character sprite
@@ -89,3 +118,5 @@ void Sprite16_240_OR(short x, short y, unsigned short *sprite, void *dest)
     short h = 16;
     for (;h;h--,addr+=30) *(long*)addr|=(long)((*sprite++) & 0xffff)<<cnt;
 }
+
+#endif

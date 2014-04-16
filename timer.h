@@ -1,5 +1,8 @@
 // timer functions
 
+#ifndef TIMER_INCLUDED
+#define TIMER_INCLUDED
+
 volatile unsigned short counter;
 
 // auto int 1 is main hardware timer, ~350Hz
@@ -13,3 +16,5 @@ void delay(unsigned short ticks) {
 	counter = 0;
 	while (counter < ticks);
 }
+
+#endif

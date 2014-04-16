@@ -1,5 +1,8 @@
 // stupid crap
 
+#ifndef STUPID_INCLUDED
+#define STUPID_INCLUDED
+
 void fillBufferWithJunk(unsigned short *buffer) {
 	char fillValue;
 	int i;
@@ -8,3 +11,5 @@ void fillBufferWithJunk(unsigned short *buffer) {
 		memset(buffer + (i * 13), fillValue, 26);
 	}
 }
+
+#endif

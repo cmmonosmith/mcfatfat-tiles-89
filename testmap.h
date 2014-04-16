@@ -1,5 +1,8 @@
 // test map for testing
 
+#ifndef TESTMAP_INCLUDED
+#define TESTMAP_INCLUDED
+
 const short testMapWidth = 20;
 
 const short testMapHeight = 10;
@@ -15,4 +18,6 @@ signed char testMap[200] = {
 	1, -1, -1, -1, -1, -1, -1, -1, -1,  1, -1,  1, -1,  1,  1,  1,  1, -1, -1, 1,
 	1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1,
 	1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 1
-};
+}
+
+#endif

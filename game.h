@@ -1,11 +1,11 @@
 // game functions
 
-#define FRAME_DELAY 3
+#ifndef GAME_INCLUDED
+#define GAME_INCLUDED
 
-short moveLeft(short x, short y, unsigned short *scrollBufferLight, unsigned short *scrollBufferDark);
-short moveRight(short x, short y, unsigned short *scrollBufferLight, unsigned short *scrollBufferDark);
-short moveUp(short x, short y, unsigned short *scrollBufferLight, unsigned short *scrollBufferDark);
-short moveDown(short x, short y, unsigned short *scrollBufferLight, unsigned short *scrollBufferDark);
+#include "draw.h"
+#include "scroll.h"
+#include "control.h"
 
 // main loop
 void game(unsigned short *scrollBufferLight, unsigned short *scrollBufferDark)
@@ -28,6 +28,7 @@ void game(unsigned short *scrollBufferLight, unsigned short *scrollBufferDark)
 	while (1) {
 		if (_keytest(RR_ESC))
 		{
+			// this is like, where a menu might go
 			break;
 		}
 		if (_keytest(RR_LEFT) && !_keytest(RR_RIGHT))
@@ -49,98 +50,4 @@ void game(unsigned short *scrollBufferLight, unsigned short *scrollBufferDark)
 	}
 }
 
-short moveLeft(short x, short y, unsigned short *scrollBufferLight, unsigned short *scrollBufferDark)
-{
-	short moved = 0;
-	if (testMap[y * testMapWidth + x - 1] < COLLISION_VALUE)
-	{
-		moved = 1;
-		drawBackground(testMap, testMapWidth, testMapHeight, x, y, scrollBufferLight, scrollBufferDark);
-		short idx;
-		int i = 16;
-		for (;i;i--)
-		{
-			scrollRight(scrollBufferLight);
-			scrollRight(scrollBufferDark);
-			idx = GrayDBufGetHiddenIdx();
-			copyScrollBuffer(scrollBufferLight, GrayDBufGetPlane(idx, LIGHT_PLANE));
-			copyScrollBuffer(scrollBufferDark, GrayDBufGetPlane(idx, DARK_PLANE));
-			drawCharacter(idx);
-			GrayDBufToggle();
-			delay(FRAME_DELAY);
-		}
-	}
-	return moved;
-}
-
-short moveRight(short x, short y, unsigned short *scrollBufferLight, unsigned short *scrollBufferDark)
-{
-	short moved = 0;
-	if (testMap[y * testMapWidth + x + 1] < COLLISION_VALUE)
-	{
-		moved = 1;
-		drawBackground(testMap, testMapWidth, testMapHeight, x, y, scrollBufferLight, scrollBufferDark);
-		short idx;
-		int i = 16;
-		for (;i;i--)
-		{
-			scrollLeft(scrollBufferLight);
-			scrollLeft(scrollBufferDark);
-			idx = GrayDBufGetHiddenIdx();
-			copyScrollBuffer(scrollBufferLight, GrayDBufGetPlane(idx, LIGHT_PLANE));
-			copyScrollBuffer(scrollBufferDark, GrayDBufGetPlane(idx, DARK_PLANE));
-			drawCharacter(idx);
-			GrayDBufToggle();
-			delay(FRAME_DELAY);
-		}
-	}
-	return moved;
-}
-
-short moveUp(short x, short y, unsigned short *scrollBufferLight, unsigned short *scrollBufferDark)
-{
-	short moved = 0;
-	if (testMap[(y - 1) * testMapWidth + x] < COLLISION_VALUE)
-	{
-		moved = 1;
-		drawBackground(testMap, testMapWidth, testMapHeight, x, y, scrollBufferLight, scrollBufferDark);
-		short idx;
-		int i = 16;
-		for (;i;i--)
-		{
-			scrollDown(scrollBufferLight);
-			scrollDown(scrollBufferDark);
-			idx = GrayDBufGetHiddenIdx();
-			copyScrollBuffer(scrollBufferLight, GrayDBufGetPlane(idx, LIGHT_PLANE));
-			copyScrollBuffer(scrollBufferDark, GrayDBufGetPlane(idx, DARK_PLANE));
-			drawCharacter(idx);
-			GrayDBufToggle();
-			delay(FRAME_DELAY);
-		}
-	}
-	return moved;
-}
-
-short moveDown(short x, short y, unsigned short *scrollBufferLight, unsigned short *scrollBufferDark)
-{
-	short moved = 0;
-	if (testMap[(y + 1) * testMapWidth + x] < COLLISION_VALUE)
-	{
-		moved = 1;
-		drawBackground(testMap, testMapWidth, testMapHeight, x, y, scrollBufferLight, scrollBufferDark);
-		short idx;
-		int i = 16;
-		for (;i;i--)
-		{
-			scrollUp(scrollBufferLight);
-			scrollUp(scrollBufferDark);
-			idx = GrayDBufGetHiddenIdx();
-			copyScrollBuffer(scrollBufferLight, GrayDBufGetPlane(idx, LIGHT_PLANE));
-			copyScrollBuffer(scrollBufferDark, GrayDBufGetPlane(idx, DARK_PLANE));
-			drawCharacter(idx);
-			GrayDBufToggle();
-			delay(FRAME_DELAY);
-		}
-	}
-	return moved;
-}
+#endif

@@ -4,7 +4,10 @@
 // instead of scrolling a screen buffer, it scrolls a larger graphics buffer
 // i.e. 208x144
 
-// note: pBuffer must start on an address that is a multiple of 4 (just make it a long)
+// note: pBuffer must start on an address that is a multiple of 2 (just make it a short)
+
+#ifndef SCROLL_INCLUDED
+#define SCROLL_INCLUDED
 
 // copy scroll buffer to screen buffer
 void copyScrollBuffer(unsigned short *scrollBuffer, unsigned short *screenBuffer) {
@@ -13,6 +16,7 @@ void copyScrollBuffer(unsigned short *scrollBuffer, unsigned short *screenBuffer
 	register short lines = 99;
 	
 	src += 575;
+	
 	asm volatile (
 	   "0:
 		move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+;move.b (%0)+,(%1)+
@@ -107,3 +111,5 @@ void scrollDown(unsigned short *pBuffer) {
 		: "0"  (src), "1"  (dest), "2"  (lines)
 	);
 }
+
+#endif

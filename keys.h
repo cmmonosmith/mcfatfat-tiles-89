@@ -1,5 +1,8 @@
 // functions for keypress detection
 
+#ifndef KEYS_INCLUDED
+#define KEYS_INCLUDED
+
 // if any key is pressed
 unsigned short isKeyPressed(void) {
 	return (_rowread(0) & 0xff);
@@ -10,3 +13,5 @@ void waitForKeyPress(void) {
 	while (!isKeyPressed());
 	while (isKeyPressed());
 }
+
+#endif

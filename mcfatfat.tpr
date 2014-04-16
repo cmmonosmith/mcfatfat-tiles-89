@@ -50,14 +50,18 @@ Use Return Value=0
 Enable Error Return=0
 Save Screen=0
 [File Editing]
-Open File=C:\Users\Mister Cuddles\Documents\TIGCC\McFatfat Tiles 89\game.h
+Open File=C:\Users\Mister Cuddles\Documents\TIGCC\McFatfat Tiles 89\main.c
 [Included Files]
 C File 1=main.c
-Header File 1=scroll.h
-Header File 2=keys.h
-Header File 3=sprites.h
-Header File 4=stupid.h
-Header File 5=testmap.h
-Header File 6=timer.h
-Header File 7=drawing.h
-Header File 8=game.h
+Header File 1=extgraph.h
+Header File 2=splash.h
+Header File 3=keys.h
+Header File 4=menu.h
+Header File 5=scroll.h
+Header File 6=stupid.h
+Header File 7=sprites.h
+Header File 8=testmap.h
+Header File 9=timer.h
+Header File 10=drawing.h
+Header File 11=control.h
+Header File 12=game.h

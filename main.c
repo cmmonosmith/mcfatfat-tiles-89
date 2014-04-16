@@ -69,13 +69,17 @@
 #include <alloc.h>
 #include <compat.h>
 
-#include "scroll.h"
+#include "extgraph.h"
+
 #include "keys.h"
+#include "menu.h"
+#include "scroll.h"
 #include "stupid.h"
 #include "sprites.h"
 #include "testmap.h"
 #include "timer.h"
 #include "drawing.h"
+#include "control.h"
 #include "game.h"
 
 void _main(void)
@@ -83,23 +87,21 @@ void _main(void)
 	char statusMessage[] = "McFatfat Tiles 89";
 	/*
 		things to figure out again
-			sprites
-				masks
-				proper rendering over other sprites
-				partial drawing?
 			other screen drawing (lines, etc)
 			reading/writing files
+				compression?
 	*/
 	
 	LCD_BUFFER *screenBuffer;
 	INT_HANDLER save_int_1;
 	INT_HANDLER save_int_5;
 	
-	// need to like... wait for this, or else... yeah
+	// need to like... wait for this, or else... yeah???
 	//while (isKeyPressed());
 	
 	screenBuffer = (LCD_BUFFER *)malloc(LCD_SIZE);
-	if (screenBuffer) {
+	if (screenBuffer)
+	{
 		// save the screen contents to replace "#define SAVE_SCREEN"
 		LCD_save(screenBuffer);
 		
@@ -107,38 +109,66 @@ void _main(void)
 		//short prgRate = PRG_getRate();
 		//PRG_setRate(0);
 		
-		// repurpose hardware timer, disable system timer interrupt
+		// repurpose hardware timer
 		save_int_1 = GetIntVec(AUTO_INT_1);
-		save_int_5 = GetIntVec(AUTO_INT_5);
 		SetIntVec(AUTO_INT_1, my_int_1_handler);
+		
+		// disable system timer interrupt
+		save_int_5 = GetIntVec(AUTO_INT_5);
 		SetIntVec(AUTO_INT_5, DUMMY_HANDLER);
 		
-		//init buffers
+		//init buffers. this is terrible error handling.
 		void *grayDBuf = malloc(GRAYDBUFFER_SIZE);
-		if (grayDBuf) {
+		if (grayDBuf)
+		{
 			unsigned short *scrollBufferLight = (unsigned short *)malloc(3744);
-			if (scrollBufferLight) {
+			if (scrollBufferLight)
+			{
 				unsigned short *scrollBufferDark  = (unsigned short *)malloc(3744);
-				if (scrollBufferDark) {
+				if (scrollBufferDark)
+				{
 					// turn on grayscale
-					if (GrayOn()) {
+					if (GrayOn())
+					{
 						GrayDBufInit(grayDBuf);
 						
-						game(scrollBufferLight, scrollBufferDark);
+						while (1)
+						{
+							short option = mainMenu();
+							if (!option)
+							{
+								break;
+							}
+							if (option == 1)
+							{
+								// play with default map
+								if (!game(scrollBufferLight, scrollBufferDark))
+								{
+									break;
+								}
+							}
+							// other options, custom maps or something
+						}
 						
 						while (isKeyPressed());
 						GrayOff();
-					} else {
+					}
+					else
+					{
 						//statusMessage = "GrayOn() failed!";
 					}
 					free(scrollBufferDark);
 				}
 				free(scrollBufferLight);
-			} else {
+			}
+			else
+			{
 				//statusMessage = "malloc(3456) failed!";
 			}
 			free(grayDBuf);
-		} else {
+		}
+		else
+		{
 			//statusMessage = "malloc(GRAYDBUFFER_SIZE) failed!";
 		}
 		
@@ -152,7 +182,9 @@ void _main(void)
 		// restore screen contents
 		LCD_restore(screenBuffer);
 		free(screenBuffer);
-	} else {
+	}
+	else
+	{
 		//statusMessage = "malloc(LCD_SIZE) failed!";
 	}
 	
