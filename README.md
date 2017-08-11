@@ -4,4 +4,4 @@ This is a tile-based set of rendering functions around which a simple RPG may be
 
 # Thanks
 
-Thanks to the TICT for their [ExtGraph library](https://github.com/debrouxl/ExtGraph). I have included modified versions of a small portion of the library. http://tict.ticalc.org
+Thanks to the TICT for their [ExtGraph library](https://github.com/debrouxl/ExtGraph). I have included modified versions of a few functions from the library, in addition to the core library. http://tict.ticalc.org
